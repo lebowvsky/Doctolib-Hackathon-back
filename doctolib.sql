@@ -31,8 +31,11 @@ CREATE TABLE `commande` (
   `date_debut` date NOT NULL,
   `date_fin` date NOT NULL,
   `id_produit` int(11) NOT NULL,
+  `id_ordonnance` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_Produit` (`id_produit`),
+  KEY `FK_Ordonnance` (`id_ordonnance`),
+  CONSTRAINT `FK_Ordonnance` FOREIGN KEY (`id_ordonnance`) REFERENCES `ordonnance` (`id`),
   CONSTRAINT `FK_Produit` FOREIGN KEY (`id_produit`) REFERENCES `produit` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -56,6 +59,7 @@ DROP TABLE IF EXISTS `medecin`;
 CREATE TABLE `medecin` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(200) DEFAULT NULL,
+  `prenom` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -80,12 +84,9 @@ CREATE TABLE `ordonnance` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_patient` int(11) NOT NULL,
   `id_medecin` int(11) NOT NULL,
-  `id_commande` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_Patient` (`id_patient`),
   KEY `FK_Medecin` (`id_medecin`),
-  KEY `FK_Commande` (`id_commande`),
-  CONSTRAINT `FK_Commande` FOREIGN KEY (`id_commande`) REFERENCES `commande` (`id`),
   CONSTRAINT `FK_Medecin` FOREIGN KEY (`id_medecin`) REFERENCES `medecin` (`id`),
   CONSTRAINT `FK_Patient` FOREIGN KEY (`id_patient`) REFERENCES `patient` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -110,6 +111,7 @@ DROP TABLE IF EXISTS `patient`;
 CREATE TABLE `patient` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(200) DEFAULT NULL,
+  `prenom` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -155,4 +157,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-06-24 14:01:56
+-- Dump completed on 2020-06-24 16:24:45

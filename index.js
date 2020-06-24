@@ -137,6 +137,36 @@ app.get('/api/produits', (req, res) => {
   });
 });
 
+app.get('/api/test', (req,res) => {
+  connection.query('SELECT * FROM ordonnance LEFT JOIN patient ON ordonnance.id_patient=ordonnance.id LEFT JOIN medecin ON ordonnance.id_medecin=ordonnance.id ', (err, results) => {
+    if(err) {
+      res.status(500).send(err.message);
+    } else {
+      res.json(results);
+    }
+  })
+});
+
+app.get('/api/test2', (req,res) => {
+  connection.query("SELECT * FROM ordonnance as o LEFT JOIN patient AS p ON o.id_patient=p.id LEFT JOIN medecin as m ON o.id_medecin=m.id LEFT JOIN commande as c ON o.id_commande=c.id", (err, results) => {
+    if(err) {
+      res.status(500).send(err.message);
+    } else {
+      res.json(results);
+    }
+  })
+});
+
+app.get('/api/test3', (req,res) => {
+  connection.query("SELECT p.nom as patient, m.nom as medecin FROM ordonnance as o LEFT JOIN patient AS p ON o.id_patient=p.id LEFT JOIN medecin as m ON o.id_medecin=m.id LEFT JOIN commande as c ON o.id_commande=c.id", (err, results) => {
+    if(err) {
+      res.status(500).send(err.message);
+    } else {
+      res.json(results);
+    }
+  })
+});
+
 //SERVER LISTENING
 app.listen(port, (err) => {
   if (err) {
