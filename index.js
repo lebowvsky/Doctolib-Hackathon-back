@@ -37,7 +37,7 @@ app.post('/api/medecins', (req, res) => {
 //GET MEDECIN FROM ID
 app.get('/api/medecins/:id', (req, res) => {
   const idMedecin = req.params.id;
-  connection.query('SELECT * FROM medecin WHERE id WHERE id = ?', idMedecin, (err, results) => {
+  connection.query('SELECT * FROM medecin WHERE id = ?', idMedecin, (err, results) => {
     if (err) {
       res.status(500).send(err.message);
     } else {
@@ -73,7 +73,7 @@ app.post('/api/patients', (req, res) => {
 //GET PATIENT FROM ID
 app.get('/api/patients/:id', (req, res) => {
   const idPatient = req.params.id;
-  connection.query('SELECT * FROM patient WHERE id WHERE id = ?', idPatient, (err, results) => {
+  connection.query('SELECT * FROM patient WHERE id = ?', idPatient, (err, results) => {
     if (err) {
       res.status(500).send(err.message);
     } else {
@@ -153,6 +153,18 @@ app.get('/api/commandes', (req, res) => {
   });
 });
 
+//GET COMMANDES FROM ID ORDONNANCE
+app.get(`/api/ordonnances/:id/commandes`, (req, res) => {
+  const idOrdonnance = req.params.id;
+  connection.query('SELECT * FROM commande AS c JOIN ordonnance AS o ON o.id=c.id_ordonnance WHERE id_ordonnance = ?', idOrdonnance, (err, results) => {
+    if (err) {
+      res.status(500).send(err.message);
+    } else {
+      res.json(results);
+    }
+  });
+});
+
 //POST NEW COMMANDE
 app.post('/api/commandes', (req, res) => {
   const formData = req.body;
@@ -166,7 +178,18 @@ app.post('/api/commandes', (req, res) => {
   });
 });
 
-//PRODUIT
+//GET ALL PRODUITS
+app.get('/api/produits', (req, res) => {
+  connection.query('SELECT * FROM produit', (err, results) => {
+    if (err) {
+      res.status(500).send(err.message);
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+//POST NEW PRODUIT
 app.post('/api/produits', (req, res) => {
   const formData = req.body;
   connection.query('INSERT INTO produit SET ?', formData, (err, results) => {
@@ -179,51 +202,10 @@ app.post('/api/produits', (req, res) => {
   });
 });
 
-app.get('/api/produits', (req, res) => {
-  connection.query('SELECT * FROM produit', (err, results) => {
-    if (err) {
-      res.status(500).send(err.message);
-    } else {
-      res.json(results);
-    }
-  });
-});
-
-app.get('/api/test', (req,res) => {
-  connection.query('SELECT * FROM ordonnance LEFT JOIN patient ON ordonnance.id_patient=ordonnance.id LEFT JOIN medecin ON ordonnance.id_medecin=ordonnance.id ', (err, results) => {
-    if(err) {
-      res.status(500).send(err.message);
-    } else {
-      res.json(results);
-    }
-  })
-});
-
-app.get('/api/test2', (req,res) => {
-  connection.query("SELECT * FROM ordonnance as o LEFT JOIN patient AS p ON o.id_patient=p.id LEFT JOIN medecin as m ON o.id_medecin=m.id LEFT JOIN commande as c ON o.id_commande=c.id", (err, results) => {
-    if(err) {
-      res.status(500).send(err.message);
-    } else {
-      res.json(results);
-    }
-  })
-});
-
-app.get('/api/test3', (req,res) => {
-  connection.query("SELECT p.nom as patient, m.nom as medecin FROM ordonnance as o LEFT JOIN patient AS p ON o.id_patient=p.id LEFT JOIN medecin as m ON o.id_medecin=m.id LEFT JOIN commande as c ON o.id_commande=c.id", (err, results) => {
-    if(err) {
-      res.status(500).send(err.message);
-    } else {
-      res.json(results);
-    }
-  })
-});
-
 //SERVER LISTENING
 app.listen(port, (err) => {
   if (err) {
     throw new Error('Something bad happened...');
   }
-
   console.log(`Server is listening on ${port}`);
 });
