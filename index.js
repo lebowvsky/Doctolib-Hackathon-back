@@ -66,8 +66,10 @@ app.get("/api/patients", (req, res) => {
   });
 });
 
+
 //POST NEW PATIENT
 app.post("/api/patients", (req, res) => {
+
   const formData = req.body;
   connection.query("INSERT INTO patient SET ?", formData, (err, results) => {
     if (err) {
