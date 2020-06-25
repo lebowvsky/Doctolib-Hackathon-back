@@ -66,10 +66,8 @@ app.get("/api/patients", (req, res) => {
   });
 });
 
-
 //POST NEW PATIENT
 app.post("/api/patients", (req, res) => {
-
   const formData = req.body;
   connection.query("INSERT INTO patient SET ?", formData, (err, results) => {
     if (err) {
@@ -126,13 +124,16 @@ app.get("/api/ordonnances", (req, res) => {
 
 // GET LAST ORDONNANCE CREATED
 app.get("/api/ordonnances/last", (req, res) => {
-  connection.query("SELECT * FROM ordonnance ORDER BY id DESC LIMIT 1", (err, results) => {
-    if (err) {
-      res.status(500).send(err.message);
-    } else {
-      res.json(results);
+  connection.query(
+    "SELECT * FROM ordonnance ORDER BY id DESC LIMIT 1",
+    (err, results) => {
+      if (err) {
+        res.status(500).send(err.message);
+      } else {
+        res.json(results);
+      }
     }
-  });
+  );
 });
 
 //GET ALL ORDONNANCES FROM ID PATIENT
@@ -195,7 +196,7 @@ app.get("/api/commandes", (req, res) => {
 app.get(`/api/ordonnances/:id/commandes`, (req, res) => {
   const idOrdonnance = req.params.id;
   connection.query(
-    "SELECT * FROM commande AS c JOIN ordonnance AS o ON o.id=c.id_ordonnance WHERE id_ordonnance = ?",
+    "SELECT *, p.nom AS produit, m.nom, m.prenom FROM commande AS c JOIN ordonnance AS o ON o.id=c.id_ordonnance JOIN produit AS p ON c.id_produit=p.id JOIN medecin AS m ON m.id=o.id_medecin WHERE id_ordonnance = ?",
     idOrdonnance,
     (err, results) => {
       if (err) {
