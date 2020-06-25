@@ -39,7 +39,7 @@ app.get('/api/patients', (req, res) => {
 
 app.get('/api/patients/:id', (req, res) => {
   const idPatient = req.params.id;
-  connection.query('SELECT * FROM patient WHERE id WHERE id = ?', idPatient, (err, results) => {
+  connection.query('SELECT * FROM patient WHERE id = ?', idPatient, (err, results) => {
     if (err) {
       res.status(500).send(err.message);
     } else {
