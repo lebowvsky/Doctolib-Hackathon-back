@@ -59,6 +59,17 @@ app.get('/api/medecins', (req, res) => {
   });
 });
 
+app.get('/api/medecins/:id', (req, res) => {
+  const idMedecin = req.params.id;
+  connection.query('SELECT * FROM medecin WHERE id = ?', idMedecin, (err, results) => {
+    if (err) {
+      res.status(500).send(err.message);
+    } else {
+      res.json(results);
+    }
+  })
+})
+
 app.post('/api/medecins', (req, res) => {
   const formData = req.body;
   connection.query('INSERT INTO medecin SET ?', formData, (err, results) => {
