@@ -124,6 +124,17 @@ app.get("/api/ordonnances", (req, res) => {
   });
 });
 
+// GET LAST ORDONNANCE CREATED
+app.get("/api/ordonnances/last", (req, res) => {
+  connection.query("SELECT * FROM ordonnance ORDER BY id DESC LIMIT 1", (err, results) => {
+    if (err) {
+      res.status(500).send(err.message);
+    } else {
+      res.json(results);
+    }
+  });
+});
+
 //GET ALL ORDONNANCES FROM ID PATIENT
 app.get(`/api/patients/:id/ordonnances`, (req, res) => {
   const idPatient = req.params.id;
