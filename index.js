@@ -101,7 +101,7 @@ app.get("/api/patients/:id", (req, res) => {
 app.get(`/api/medecins/:id/patients`, (req, res) => {
   const idMedecin = req.params.id;
   connection.query(
-    "SELECT p.nom, p.prenom, m.id, o.id FROM medecin AS m JOIN ordonnance AS o ON o.id_medecin=m.id JOIN patient AS p ON o.id_patient=p.id WHERE m.id = ?",
+    "SELECT p.nom, COUNT(p.nom), p.prenom, m.id, o.id FROM medecin AS m JOIN ordonnance AS o ON o.id_medecin=m.id JOIN patient AS p ON o.id_patient=p.id WHERE m.id = ? GROUP BY p.nom, p.prenom, m.id, o.id",
     idMedecin,
     (err, results) => {
       if (err) {
@@ -223,6 +223,18 @@ app.post("/api/commandes", (req, res) => {
 //GET ALL PRODUITS
 app.get("/api/produits", (req, res) => {
   connection.query("SELECT * FROM produit", (err, results) => {
+    if (err) {
+      res.status(500).send(err.message);
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+//GET ONE PRODUITS
+app.get("/api/produits/:id", (req, res) => {
+  const idProduit = req.params.id;
+  connection.query("SELECT nom FROM produit WHERE id = ?",idProduit ,(err, results) => {
     if (err) {
       res.status(500).send(err.message);
     } else {
